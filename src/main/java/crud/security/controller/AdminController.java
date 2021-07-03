@@ -1,13 +1,12 @@
 package crud.security.controller;
 
 import crud.security.model.User;
+import crud.security.service.RoleService;
 import crud.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -17,10 +16,12 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping()
@@ -48,6 +49,19 @@ public class AdminController {
     public String userDetails(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.findUserById(id));
         return "detailsAll";
+    }
+
+    @GetMapping("/create")
+    public String createForm(@ModelAttribute("user") User user, Model model) {
+        model.addAttribute("roles", roleService.getRolesList());
+        return "createUser-form";
+    }
+
+    @PostMapping()
+    public String createUser(@ModelAttribute("user") User user,
+                             @RequestParam("chosenRoles") String[] chosenRoles) {
+        userService.saveUser(user, chosenRoles);
+        return "redirect:/admin/users";
     }
 
 
