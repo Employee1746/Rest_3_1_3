@@ -65,5 +65,24 @@ public class AdminController {
     }
 
 
+    @GetMapping("/user/update/{id}")
+    public String updateUserForm(@PathVariable("id") Long id,
+                                 Model model) {
+        model.addAttribute("user", userService.findUserById(id));
+        model.addAttribute("roles", roleService.getRolesList());
+        return "/user-update";
+    }
 
+    @PostMapping("/user/update")
+    public String updateUser(@ModelAttribute("user") User user,
+                             @RequestParam("updatedRoles") String[] updatedRoles) {
+        userService.updateUser(user, updatedRoles);
+        return "redirect:/admin/users";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+        return "redirect:/admin/users";
+    }
 }

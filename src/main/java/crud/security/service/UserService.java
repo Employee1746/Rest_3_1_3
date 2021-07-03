@@ -14,4 +14,7 @@ public interface UserService {
 
     public void saveUser(User user, String[] chosenRoles);
 
+    public void updateUser(User user, String[] updatedRoles);
+
+    public void deleteUser(Long id);
 }

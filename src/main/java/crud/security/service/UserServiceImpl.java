@@ -49,5 +49,16 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    @Transactional
+    public void updateUser(User user, String[] updatedRoles) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(roleService.getRolesFromArray(updatedRoles));
+        userRepository.save(user);
+    }
 
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }
