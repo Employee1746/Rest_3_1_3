@@ -1,5 +1,6 @@
 package crud.security.service;
 
+import crud.security.model.Role;
 import crud.security.model.User;
 import crud.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -57,9 +60,20 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
     }
-
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    public String getUsersRolesById(Long id) {
+        List<Role> roles = new ArrayList<>(userRepository.findUserById(id).getRoles());
+        StringBuilder currentUserRoles = new StringBuilder();
+        for (Role role : roles) {
+            currentUserRoles.append(role.getName().replaceAll("ROLE_"," "));
+        }
+        return currentUserRoles.toString();
+    }
+
+
 }

@@ -3,6 +3,7 @@ package crud.security.service;
 import crud.security.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -17,4 +18,6 @@ public interface UserService {
     public void updateUser(User user, String[] updatedRoles);
 
     public void deleteUser(Long id);
+
+    public String getUsersRolesById(Long id);
 }

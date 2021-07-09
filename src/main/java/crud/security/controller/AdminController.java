@@ -25,45 +25,93 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String adminPanel(@ModelAttribute("user") User user, Principal principal, Model model) {
+    public String admin(Principal principal, Model model,
+                        @ModelAttribute("newUser") User user) {
         Long id = userService.findUserByName(principal.getName()).getId();
+        model.addAttribute("currentUser", userService.findUserById(id));        //для обображения активного пользователя во вкладке
+        model.addAttribute("currentRoles", userService.getUsersRolesById(id));  //для обображения списка ролей пользователя на панели
         List<User> userList = userService.getAllUser();
-        model.addAttribute("users", userList);
-        model.addAttribute("user", userService.findUserById(id));
+        model.addAttribute("users", userList);                                  //для обображения списка всех пользователей
         model.addAttribute("roles", roleService.getRolesList());
-//        model.addAttribute("id", id);
-        return "adminPanel";
+        return "admin";
     }
 
-    @PostMapping()
-    public String createUser(@ModelAttribute("user") User user,
-                             @RequestParam("chosenRoles") String[] chosenRoles) {
+    @PostMapping("/edit")
+    public String editUSer(User user, String[] updatedRoles) {
+        userService.updateUser(user, updatedRoles);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/findOne")
+    @ResponseBody
+    public User findOne(long id) {
+        return userService.findUserById(id);
+    }
+
+    @PostMapping("/save")
+    public String saveUser(@ModelAttribute("newUser") User user,
+                           @RequestParam("chosenRoles") String[] chosenRoles) {
         userService.saveUser(user, chosenRoles);
         return "redirect:/admin";
     }
 
-    @GetMapping("/update/{id}")
-    public String updateUserForm(@PathVariable("id") Long id, Model model) {
-        System.out.println("updateUserForm " + id);
-        model.addAttribute("user", userService.findUserById(id));
-        model.addAttribute("roles", roleService.getRolesList());
-        return "adminPanel";
-    }
-
-    @PostMapping("/update")
-    public String updateUser(@ModelAttribute("user") User user,
-                             @RequestParam("updatedRoles") String[] updatedRoles) {
-        System.out.println("PostMapping " + user);
-        System.out.println("PostMapping " + user.getRoles());
-        System.out.println("PostMapping " + user.getId());
-        System.out.println(updatedRoles);
-        userService.updateUser(user, updatedRoles);
-        System.out.println(updatedRoles);
-        System.out.println("PostMapping " + user);
-        System.out.println("PostMapping " + user.getRoles());
-        System.out.println("PostMapping " + user.getId());
+    @DeleteMapping("/delete")
+    public String delete(Long id) {
+        userService.deleteUser(id);
         return "redirect:/admin";
     }
+
+//    @DeleteMapping("/delete/{id}")
+//    public String deleteUser(@PathVariable("id") Long id) {
+//        userService.deleteUser(id);
+//        return "redirect:/admin";
+//    }
+
+
+//    @GetMapping()
+//    public String adminPanel(@ModelAttribute("user") User user, Principal principal, Model model) {
+//        Long id = userService.findUserByName(principal.getName()).getId();
+//        List<User> userList = userService.getAllUser();
+//        model.addAttribute("users", userList);
+//        model.addAttribute("user", userService.findUserById(id));
+//        model.addAttribute("roles", roleService.getRolesList());
+////        model.addAttribute("id", id);
+//        return "adminPanel";
+//    }
+//
+//    @PostMapping()
+//    public String createUser(@ModelAttribute("user") User user,
+//                             @RequestParam("chosenRoles") String[] chosenRoles) {
+//        userService.saveUser(user, chosenRoles);
+//        return "redirect:/admin";
+//    }
+//
+//    @GetMapping("/update/{id}")
+//    public String updateUserForm(@PathVariable("id") Long id, Model model) {
+//        System.out.println("updateUserForm " + id);
+//        model.addAttribute("user", userService.findUserById(id));
+//        model.addAttribute("roles", roleService.getRolesList());
+//        return "redirect:/admin";
+//    }
+//
+//    @PostMapping("/update")
+//    public String updateUser(User user, @RequestParam("updatedRoles") String[] updatedRoles) {
+//        userService.updateUser(user, updatedRoles);
+//        return "redirect:/admin";
+//    }
+
+
+//    @GetMapping("user-update/{id}")
+//    public String updateUserForm(@PathVariable("id") Long id, Model model) {
+//        model.addAttribute("user", userService.getUserById(id));
+//        return "/user-update";
+//    }
+//
+//    @PostMapping("/user-update")
+//    public String updateUser(User user) {
+//        userService.updateUser(user);
+//        return "redirect:/";
+//    }
 
 //    @GetMapping()
 //    public String homePage(Principal principal, Model model) {
