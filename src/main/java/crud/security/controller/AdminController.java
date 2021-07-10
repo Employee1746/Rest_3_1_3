@@ -56,15 +56,22 @@ public class AdminController {
     }
 
     @GetMapping("/delete")
-    public String deleteUser(Long id) {
+    public String deleteUser(Long id) {  // полностью рабочий
         userService.deleteUser(id);
         return "redirect:/admin";
     }
 
-//    @DeleteMapping("/delete/{id}")
-//    public String deleteUser(@PathVariable("id") Long id) {
+//    @RequestMapping(value = "/delete", method = {RequestMethod.DELETE, RequestMethod.GET})
+//    public String delete(Long id) {
 //        userService.deleteUser(id);
 //        return "redirect:/admin";
 //    }
+
+//    @DeleteMapping(value = "/delete")
+//    public String delete(Long id) {
+//        userService.deleteUser(id);
+//        return "redirect:/admin";
+//    }
+
 
 }
