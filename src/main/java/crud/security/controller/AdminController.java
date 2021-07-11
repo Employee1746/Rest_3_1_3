@@ -36,7 +36,7 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping("/edit")
+    @PatchMapping("/edit")
     public String editUSer(User user, String[] updatedRoles) {
         userService.updateUser(user, updatedRoles);
         return "redirect:/admin";
@@ -60,18 +60,4 @@ public class AdminController {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
-
-//    @RequestMapping(value = "/delete", method = {RequestMethod.DELETE, RequestMethod.GET})
-//    public String delete(Long id) {
-//        userService.deleteUser(id);
-//        return "redirect:/admin";
-//    }
-
-//    @DeleteMapping(value = "/delete")
-//    public String delete(Long id) {
-//        userService.deleteUser(id);
-//        return "redirect:/admin";
-//    }
-
-
 }

@@ -14,7 +14,6 @@ $(document).ready(function () {
             $('.myForm #exampleModal').modal();
     });
 
-
     $('.table .delBtn').on('click', function (event) {
         event.preventDefault();
         var href = $(this).attr('href');
@@ -24,9 +23,7 @@ $(document).ready(function () {
             $('.myFormDelete #usernameDelete').val(user.username);
             $('.myFormDelete #surnameDelete').val(user.surname);
             $('.myFormDelete #emailDelete').val(user.email);
-            $('.myFormDelete #passwordDelete').val('');
         });
         $('.myFormDelete #exampleModalDelete').modal();
     });
-
 });

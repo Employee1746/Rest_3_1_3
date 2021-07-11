@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -22,6 +22,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping()
+    public String user(Principal principal, Model model) {
+        Long id = userService.findUserByName(principal.getName()).getId();
+        model.addAttribute("currentUser", userService.findUserById(id));        //для обображения активного пользователя во вкладке
+        model.addAttribute("currentRoles", userService.getUsersRolesById(id));  //для обображения списка ролей пользователя на панели
+        model.addAttribute("userRole", userService.findUserByName(principal.getName()).getRoles());
+        return "user";
+    }
 //    @GetMapping("user/profile")
 //    public String homePage(Principal principal, Model model) {
 //        Long id = userService.findUserByName(principal.getName()).getId();

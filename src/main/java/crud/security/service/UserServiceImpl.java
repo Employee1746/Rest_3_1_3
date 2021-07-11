@@ -61,11 +61,13 @@ public class UserServiceImpl implements UserService {
 
     }
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public String getUsersRolesById(Long id) {
         List<Role> roles = new ArrayList<>(userRepository.findUserById(id).getRoles());
         StringBuilder currentUserRoles = new StringBuilder();
@@ -74,6 +76,4 @@ public class UserServiceImpl implements UserService {
         }
         return currentUserRoles.toString();
     }
-
-
 }
