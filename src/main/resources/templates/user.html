@@ -30,9 +30,9 @@
                 <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">User</a>
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-10">
             <div class="tab-content" id="v-pills-tabContent">
-                <!--                вкладка инфо о текущем пользователе(админ)-->
+                <!--                вкладка инфо о текущем пользователе(изер)-->
                 <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                     <h1>User information-page</h1>
                     <h2 class="h4 mb-3">About user</h2>
@@ -42,7 +42,6 @@
                             <th>Username</th>
                             <th>Surname</th>
                             <th>Email</th>
-                            <th>Password</th>
                             <th>Role</th>
                         </tr>
                         <tr th:object="${currentUser}">
@@ -50,8 +49,7 @@
                             <td th:utext="${currentUser.username}">Username</td>
                             <td th:utext="${currentUser.surname}">Surname</td>
                             <td th:utext="${currentUser.email}">Email</td>
-                            <td th:utext="${currentUser.password}">Password</td>
-                            <td th:utext="${currentUser.roles}">Role</td>
+                            <td th:utext="${currentRoles}">Role</td>
                         </tr>
                     </table>
                 </div>

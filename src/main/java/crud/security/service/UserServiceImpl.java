@@ -29,7 +29,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<User> getAllUser() {
-        return userRepository.findAll();
+        List<User> userList = userRepository.findAll();
+        for (User user : userList) {
+            user.setUserRolesString(getStringUsersRolesById(user.getId()));
+        }
+        return userList;
     }
 
     @Override
@@ -60,6 +64,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
     }
+
     @Override
     @Transactional
     public void deleteUser(Long id) {
@@ -68,11 +73,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String getUsersRolesById(Long id) {
+    public String getStringUsersRolesById(Long id) {
         List<Role> roles = new ArrayList<>(userRepository.findUserById(id).getRoles());
         StringBuilder currentUserRoles = new StringBuilder();
         for (Role role : roles) {
-            currentUserRoles.append(role.getName().replaceAll("ROLE_"," "));
+            currentUserRoles.append(role.getName().replaceAll("ROLE_", " "));
         }
         return currentUserRoles.toString();
     }

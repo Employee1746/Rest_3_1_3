@@ -20,6 +20,6 @@ public interface UserService {
 
     public void deleteUser(Long id);
 
-    public String getUsersRolesById(Long id);
+    public String getStringUsersRolesById(Long id);
 
 }

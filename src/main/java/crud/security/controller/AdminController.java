@@ -29,16 +29,17 @@ public class AdminController {
                         @ModelAttribute("newUser") User user) {
         Long id = userService.findUserByName(principal.getName()).getId();
         model.addAttribute("currentUser", userService.findUserById(id));        //для обображения активного пользователя во вкладке
-        model.addAttribute("currentRoles", userService.getUsersRolesById(id));  //для обображения списка ролей на панели
+        model.addAttribute("currentRoles", userService.getStringUsersRolesById(id));  //для обображения списка ролей на панели
         List<User> userList = userService.getAllUser();
         model.addAttribute("users", userList);                                  //для обображения списка всех пользователей
         model.addAttribute("roles", roleService.getRolesList());
         return "admin";
     }
 
-    @PatchMapping("/edit")
-    public String editUSer(User user, String[] updatedRoles) {
-        userService.updateUser(user, updatedRoles);
+    @PostMapping("/save")
+    public String saveUser(@ModelAttribute("newUser") User user,
+                           @RequestParam("chosenRoles") String[] chosenRoles) {
+        userService.saveUser(user, chosenRoles);
         return "redirect:/admin";
     }
 
@@ -48,10 +49,9 @@ public class AdminController {
         return userService.findUserById(id);
     }
 
-    @PostMapping("/save")
-    public String saveUser(@ModelAttribute("newUser") User user,
-                           @RequestParam("chosenRoles") String[] chosenRoles) {
-        userService.saveUser(user, chosenRoles);
+    @PatchMapping("/edit")
+    public String editUSer(User user, String[] updatedRoles) {
+        userService.updateUser(user, updatedRoles);
         return "redirect:/admin";
     }
 
