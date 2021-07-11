@@ -29,7 +29,7 @@ public class AdminController {
                         @ModelAttribute("newUser") User user) {
         Long id = userService.findUserByName(principal.getName()).getId();
         model.addAttribute("currentUser", userService.findUserById(id));        //для обображения активного пользователя во вкладке
-        model.addAttribute("currentRoles", userService.getUsersRolesById(id));  //для обображения списка ролей пользователя на панели
+        model.addAttribute("currentRoles", userService.getUsersRolesById(id));  //для обображения списка ролей на панели
         List<User> userList = userService.getAllUser();
         model.addAttribute("users", userList);                                  //для обображения списка всех пользователей
         model.addAttribute("roles", roleService.getRolesList());
@@ -55,8 +55,8 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/delete")
-    public String deleteUser(Long id) {  // полностью рабочий
+    @DeleteMapping("/delete")
+    public String deleteUser(Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
