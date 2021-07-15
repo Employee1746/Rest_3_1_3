@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -50,19 +49,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void saveUser(User user, String[] chosenRoles) {
+    public void saveUser(User user/*, String[] chosenRoles*/) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(roleService.getRolesFromArray(chosenRoles));
+        //user.setRoles(roleService.getRolesFromArray(chosenRoles));
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void updateUser(User user, String[] updatedRoles) {
+    public User updateUser(User user/*, String[] updatedRoles*/) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(roleService.getRolesFromArray(updatedRoles));
+//        user.setRoles(roleService.getRolesFromArray(updatedRoles));
         userRepository.save(user);
 
+        return user;
     }
 
     @Override

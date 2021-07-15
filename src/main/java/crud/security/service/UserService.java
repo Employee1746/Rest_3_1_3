@@ -1,10 +1,8 @@
 package crud.security.service;
 
-import crud.security.model.Role;
 import crud.security.model.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
 
@@ -14,9 +12,9 @@ public interface UserService {
 
     public User findUserById(Long id);
 
-    public void saveUser(User user, String[] chosenRoles);
+    public void saveUser(User user/*, String[] chosenRoles*/);
 
-    public void updateUser(User user, String[] updatedRoles);
+    public User updateUser(User user/*, String[] updatedRoles*/);
 
     public void deleteUser(Long id);
 

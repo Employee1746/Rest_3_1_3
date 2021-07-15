@@ -1,6 +1,7 @@
 package crud.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,13 +29,15 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @JsonIgnore
+//    @JsonIgnore
+//    @JsonSerialize
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     @Transient
+    @JsonSerialize
     private String userRolesString;
 
     public String getUserRolesString() {
@@ -48,12 +51,13 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String surname, String email, String password, Set<Role> roles) {
+    public User(String username, String surname, String email, String password, Set<Role> roles, String userRolesString) {
         this.username = username;
         this.surname = surname;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.userRolesString = userRolesString;
     }
 
     public Long getId() {
