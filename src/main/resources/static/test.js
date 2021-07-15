@@ -1,8 +1,8 @@
 $(async function () {
     await getTableWithUsers();
     //getNewUserForm();
-    getDefaultModal();
-    addNewUser();
+    await getDefaultModal();
+    await addNewUser();
 })
 
 const userFetchService = {
@@ -11,11 +11,18 @@ const userFetchService = {
         'Content-Type': 'application/json',
         'Referer': null
     },
-    // bodyAdd : async function(user) {return {'method': 'POST', 'headers': this.head, 'body': user}},
     findAllUsers: async () => await fetch('admin/users'),
     findOneUser: async (id) => await fetch(`admin/users/${id}`),
-    addNewUser: async (user) => await fetch('admin/users', {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
-    updateUser: async (user, id) => await fetch(`admin/users/${id}`, {method: 'PUT', headers: userFetchService.head, body: JSON.stringify(user)}),
+    addNewUser: async (user) => await fetch('admin/users', {
+        method: 'POST',
+        headers: userFetchService.head,
+        body: JSON.stringify(user)
+    }),
+    updateUser: async (user, id) => await fetch(`admin/users/${id}`, {
+        method: 'PUT',
+        headers: userFetchService.head,
+        body: JSON.stringify(user)
+    }),
     deleteUser: async (id) => await fetch(`admin/users/${id}`, {method: 'DELETE', headers: userFetchService.head})
 }
 
@@ -47,7 +54,6 @@ async function getTableWithUsers() {
                 table.append(myTable);
             })
         })
-
     // обрабатываем нажатие на любую из кнопок edit или delete
     // достаем из нее данные и отдаем модалке, которую к тому же открываем
     $("#allUsers").find('button').on('click', (event) => {
@@ -90,11 +96,10 @@ async function getDefaultModal() {
     })
 }
 
-
 // редактируем юзера из модалки редактирования, забираем данные, отправляем
 async function editUser(modal, id) {
-    let preuser = await userFetchService.findOneUser(id);
-    let user = preuser.json();
+    let findUser = await userFetchService.findOneUser(id);
+    let user = findUser.json();
 
     modal.find('.modal-title').html('Edit user');
 
@@ -103,19 +108,27 @@ async function editUser(modal, id) {
     modal.find('.modal-footer').append(closeButton);
     modal.find('.modal-footer').append(editButton);
 
-
     user.then(user => {
         let bodyForm = `
             <form class="form-group" id="editUser">
                 <input type="text" class="form-control" id="id" name="id" value="${user.id}" disabled>Id:<br>
+                
+                
+
+                
+                
+                
+                
+                
+                
+                
                 <input class="form-control" type="text" id="username" value="${user.username}">Username: <br>
                 <input class="form-control" type="text" id="surname" value="${user.surname}">Surname:<br>
                 <input class="form-control" type="text" id="email" value="${user.email}">Email:<br>
                 <input class="form-control" type="password" id="password">Password:<br>
-         <!--   <input class="form-control" id="age" type="number" value="${user.role}">    -->
+<!--   <input class="form-control" id="age" type="number" value="${user.role}">    -->
             </form>
         `;
-        console.log(bodyForm)
         modal.find('.modal-body').append(bodyForm);
     })
 
@@ -132,28 +145,16 @@ async function editUser(modal, id) {
             email: email,
             password: password
         }
-        const response = await userFetchService.updateUser(data, id);
-
-        if (response.ok) {
-            getTableWithUsers();
-            modal.modal('hide');
-        } else {
-        //     let body = await response.json();
-        //     let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
-        //                     ${body.info}
-        //                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        //                         <span aria-hidden="true">&times;</span>
-        //                     </button>
-        //                 </div>`;
-        //     modal.find('.modal-body').prepend(alert);
-        }
+        await userFetchService.updateUser(data, id);
+        await getTableWithUsers();
+        modal.modal('hide');
     })
 }
 
 // удаляем юзера из модалки удаления
 async function deleteUser(modal, id) {
     await userFetchService.deleteUser(id);
-    getTableWithUsers();
+    await getTableWithUsers();
     modal.find('.modal-title').html('');
     modal.find('.modal-body').html('User was deleted');
     let closeButton = `<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>`
@@ -161,50 +162,31 @@ async function deleteUser(modal, id) {
 }
 
 async function addNewUser() {
-    $('#addNewUserButton' ).click(async () =>  {
+    $('#addNewUserButton').click(async () => {
         let addUserForm = $('#addUser')
         let username = addUserForm.find('#usernameNew').val();
         let surname = addUserForm.find('#surnameNew').val();
         let email = addUserForm.find('#emailNew').val();
         let password = addUserForm.find('#passwordNew').val();
+        let chosenRoles = addUserForm.find('#chosenRoles').val();
         let data = {
             username: username,
             surname: surname,
             email: email,
-            password: password
+            password: password,
+            roles: getRole("#chosenRoles")
         }
-        const response = await userFetchService.addNewUser(data);
-        if (response.ok) {
-            getTableWithUsers();
-            addUserForm.find('#usernameNew').val('');
-            addUserForm.find('#surnameNew').val('');
-            addUserForm.find('#emailNew').val('');
-            addUserForm.find('#passwordNew').val('');
-        } else {
-            // let body = await response.json();
-            // let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
-            //                 ${body.info}
-            //                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            //                     <span aria-hidden="true">&times;</span>
-            //                 </button>
-            //             </div>`;
-            // addUserForm.prepend(alert)
+        console.log(getRole("#chosenRoles"))
+
+        function getRole(selectRoles) {
+            let data = [];
+            $(selectRoles).find("option:selected").each(function () {
+                data.push({id: $(this).val(), role: $(this).attr("name"), authority: $(this).attr("name")})
+            });
+            return data;
         }
+        console.log(chosenRoles)
+        await userFetchService.addNewUser(data);
+        await getTableWithUsers();
     })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
@@ -37,13 +38,13 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
         userService.updateUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("users/{id}")
-    public ResponseEntity<?> apiDeleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<User> apiDeleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -52,6 +53,11 @@ public class AdminController {
     public ResponseEntity<User> newUser(@RequestBody User user) {
         userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        return new ResponseEntity<>(roleService.getRolesList(), HttpStatus.OK);
     }
 
 //    @GetMapping("/user")
