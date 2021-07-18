@@ -12,9 +12,9 @@ public interface UserService {
 
     public User findUserById(Long id);
 
-    public void saveUser(User user/*, String[] chosenRoles*/);
+    public void saveUser(User user);
 
-    public User updateUser(User user/*, String[] updatedRoles*/);
+    public User updateUser(User user);
 
     public void deleteUser(Long id);
 

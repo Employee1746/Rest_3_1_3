@@ -1,15 +1,17 @@
 package crud.security.controller;
 
+import crud.security.model.User;
 import crud.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class UserController {
 
@@ -20,12 +22,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping()
-    public String user(Principal principal, Model model) {
-        Long id = userService.findUserByName(principal.getName()).getId();
-        model.addAttribute("currentUser", userService.findUserById(id));
-        model.addAttribute("currentRoles", userService.getStringUsersRolesById(id));
-        model.addAttribute("userRole", userService.findUserByName(principal.getName()).getRoles());
-        return "user";
+    @GetMapping("/user")
+    public ResponseEntity<User> getCurrentUser(Principal principal) {
+        User user = userService.findUserByName(principal.getName());
+        user.setUserRolesString(userService.getStringUsersRolesById(user.getId()));
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

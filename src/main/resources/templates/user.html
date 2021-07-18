@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin panel</title>
+    <link href="webjars/bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
     <!--    отображение элементов bootstrap-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
           integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
@@ -16,27 +17,30 @@
           rel="stylesheet">
 </head>
 <body>
-<!--это верхняя панель-->
+<!--верхняя панель-->
 <nav class="navbar fixed-top navbar-dark bg-dark">
-    <a class="navbar-brand" href="" th:utext="${currentUser.username} + ' with roles: ' + ${currentRoles}"></a>
+    <a class="navbar-brand" id="topBar" style="color: white"></a>
     <a class="navbar-brand" href=/logout>Logout</a>
 </nav>
 <br/><br/><br/>
-<!--это верхняя панель-->
+<!--верхняя панель-->
 <div class="bd-example bd-example-tabs">
     <div class="row">
         <div class="col-2">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">User</a>
+                <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile"
+                   role="tab" aria-controls="v-pills-profile" aria-selected="true">User</a>
             </div>
         </div>
         <div class="col-10">
             <div class="tab-content" id="v-pills-tabContent">
-                <!--                вкладка инфо о текущем пользователе(изер)-->
-                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                <!--                вкладка инфо о текущем пользователе-->
+                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel"
+                     aria-labelledby="v-pills-profile-tab">
                     <h1>User information-page</h1>
                     <h2 class="h4 mb-3">About user</h2>
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="currentUserTable">
+                        <thead>
                         <tr>
                             <th>ID</th>
                             <th>Username</th>
@@ -44,30 +48,25 @@
                             <th>Email</th>
                             <th>Role</th>
                         </tr>
-                        <tr th:object="${currentUser}">
-                            <td th:utext="${currentUser.id}">ID</td>
-                            <td th:utext="${currentUser.username}">Username</td>
-                            <td th:utext="${currentUser.surname}">Surname</td>
-                            <td th:utext="${currentUser.email}">Email</td>
-                            <td th:utext="${currentRoles}">Role</td>
-                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--переключение вкладок-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
-<script crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" type="text/javascript"></script>
-<script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="../static/admin.js" th:src="@{/admin.js}" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="/js/app.js"></script>
+<script src="../static/admin.js" th:src="@{/user.js}" type="text/javascript"></script>
 </body>
 </html>

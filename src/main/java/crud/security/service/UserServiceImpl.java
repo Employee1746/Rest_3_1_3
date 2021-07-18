@@ -49,17 +49,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void saveUser(User user/*, String[] chosenRoles*/) {
+    public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        //user.setRoles(roleService.getRolesFromArray(chosenRoles));
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public User updateUser(User user/*, String[] updatedRoles*/) {
+    public User updateUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setRoles(roleService.getRolesFromArray(updatedRoles));
         userRepository.save(user);
 
         return user;
