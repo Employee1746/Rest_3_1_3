@@ -1,7 +1,7 @@
 $(async function () {
-    await getTableWithUsers();
-    await getDefaultModal();
-    await addNewUser();
+    await getAllUsersTable();
+    await getModal();
+    await addUser();
     await getTableWithCurrentUser();
 })
 
@@ -14,7 +14,7 @@ const userFetchService = {
     findAllUsers: async () => await fetch('admin/users'),
     findOneUser: async (id) => await fetch(`admin/users/${id}`),
     findCurrentUser: async () => await fetch(`admin/user`),
-    addNewUser: async (user) => await fetch('admin/users', {
+    addUser: async (user) => await fetch('admin/users', {
         method: 'POST',
         headers: userFetchService.head,
         body: JSON.stringify(user)
@@ -27,7 +27,7 @@ const userFetchService = {
     deleteUser: async (id) => await fetch(`admin/users/${id}`, {method: 'DELETE', headers: userFetchService.head})
 }
 
-async function getTableWithUsers() {
+async function getAllUsersTable() {
     let table = $('#allUsers tbody');
     table.empty();
 
@@ -44,11 +44,11 @@ async function getTableWithUsers() {
                             <td>${user.userRolesString}</td>           
                             <td>
                                 <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info eBtn" 
-                                data-toggle="modal" data-target="#someDefaultModal">Edit</button>
+                                data-toggle="modal" data-target="#modalWindow">Edit</button>
                             </td>
                             <td>
                                 <button type="button" data-userid="${user.id}" data-action="delete" class="btn btn-danger delBtn" 
-                                data-toggle="modal" data-target="#someDefaultModal">Delete</button>
+                                data-toggle="modal" data-target="#modalWindow">Delete</button>
                             </td>
                         </tr>
                 )`;
@@ -56,10 +56,8 @@ async function getTableWithUsers() {
             })
         })
 
-    // обрабатываем нажатие на любую из кнопок edit или delete
-    // достаем из нее данные и отдаем модалке, которую к тому же открываем
     $("#allUsers").find('button').on('click', (event) => {
-        let defaultModal = $('#someDefaultModal');
+        let defaultModal = $('#modalWindow');
 
         let targetButton = $(event.target);
         let buttonUserId = targetButton.attr('data-userid');
@@ -71,10 +69,9 @@ async function getTableWithUsers() {
     })
 }
 
-// что то деалем при открытии модалки и при закрытии
-// основываясь на ее дата атрибутах
-async function getDefaultModal() {
-    $('#someDefaultModal').modal({
+//в зависимости от окна заполняется его содержимое
+async function getModal() {
+    $('#modalWindow').modal({
         keyboard: true,
         backdrop: "static",
         show: false
@@ -119,13 +116,9 @@ async function getTableWithCurrentUser() {
 
         let userInfo = document.getElementById('topBar');
         userInfo.innerHTML = `${user.username} with roles: ${user.userRolesString}`;
-
-
     })
-
 }
 
-// редактируем юзера из модалки редактирования, забираем данные, отправляем
 async function editUser(modal, id) {
     let findUser = await userFetchService.findOneUser(id);
     let user = findUser.json();
@@ -179,12 +172,11 @@ async function editUser(modal, id) {
             roles: getRole("#updatedRoles")
         }
         await userFetchService.updateUser(data, id);
-        await getTableWithUsers();
+        await getAllUsersTable();
         modal.modal('hide');
     })
 }
 
-// удаляем юзера из модалки удаления
 async function deleteUser(modal, id) {
 
     modal.find('.modal-title').html('Delete user');
@@ -226,12 +218,12 @@ async function deleteUser(modal, id) {
     })
     $("#deleteButton").on('click', async () => {
         await userFetchService.deleteUser(id);
-        await getTableWithUsers();
+        await getAllUsersTable();
         modal.modal('hide');
     })
 }
 
-async function addNewUser() {
+async function addUser() {
     $('#addNewUserButton').click(async () => {
         let addUserForm = $('#addUser')
         let username = addUserForm.find('#usernameNew').val();
@@ -245,11 +237,15 @@ async function addNewUser() {
             password: password,
             roles: getRole("#chosenRoles")
         }
-        await userFetchService.addNewUser(data);
-        await getTableWithUsers();
+        await userFetchService.addUser(data);
+        await getAllUsersTable();
+        $('#addNewUserButton').click(function() {
+            $('#allUsersTable').tab('show')
+        })
     })
 }
 
+//роли переданные из html в юзера
 function getRole(selectRoles) {
     let data = [];
     $(selectRoles).find("option:selected").each(function () {
